@@ -66,23 +66,42 @@ def search(LIST):
 
 ## -- PROCESSING
 
-def selectionSort(LIST):
+def quickSort(LIST, FIRST_INDEX, LAST_INDEX):
     """
-    compares the current index value with the rest of the set. It will find the
-    lowest value in the set and place it in the lowest index of the unsorted part of the list.
+    assign the first value as the pivot and place it in its correct location
     :param LIST: list (int)
+    :param FIRST_INDEX: (int)
+    :param LAST_INDEX: (int)
     :return: None
     """
-    for i in range(len(LIST) - 1):  # for each place in the list (except the last)
-        MIN_IND = i  # assume the index w/ lowest value is i
-        for j in range(i + 1, len(LIST)):  # for each place after i (includes the last)
-            if LIST[j] < LIST[MIN_IND]:  # test if subsequent value is less than the current assumed minimum
-                MIN_IND = j  # update the index of the current assumed min value
-        if LIST[MIN_IND] < LIST[i]:  # test if minimum value is not at the start of the unsorted list
-            # swaps the min value with the lowest index in the unsorted part of the list
-            TEMP = LIST[i]
-            LIST[i] = LIST[MIN_IND]
-            LIST[MIN_IND] = TEMP
+    if FIRST_INDEX < LAST_INDEX:  # tests that the list is one or more
+
+        PIVOT_VALUE = LIST[FIRST_INDEX]
+
+        LEFT_INDEX = FIRST_INDEX + 1
+        RIGHT_INDEX = LAST_INDEX
+
+        DONE = False
+        while not DONE:
+            while LEFT_INDEX <= RIGHT_INDEX and LIST[LEFT_INDEX] <= PIVOT_VALUE:
+                LEFT_INDEX += 1
+
+            while RIGHT_INDEX >= LEFT_INDEX and LIST[RIGHT_INDEX] >= PIVOT_VALUE:
+                RIGHT_INDEX -= 1
+
+            if RIGHT_INDEX < LEFT_INDEX:
+                DONE = True
+            else:
+                TEMP = LIST[LEFT_INDEX]
+                LIST[LEFT_INDEX] = LIST[RIGHT_INDEX]
+                LIST[RIGHT_INDEX] = TEMP
+
+        TEMP = LIST[FIRST_INDEX]
+        LIST[FIRST_INDEX] = LIST[RIGHT_INDEX]
+        LIST[RIGHT_INDEX] = TEMP
+
+        quickSort(LIST, FIRST_INDEX, RIGHT_INDEX - 1)
+        quickSort(LIST, RIGHT_INDEX + 1, LAST_INDEX)
 
 
 ## -- OUTPUTS
@@ -115,7 +134,7 @@ if __name__ == "__main__":
     RAWARR, HEADERS = getRawData('../comicBookCharData_mixed.csv')
     # rawArr is a 2D arrays holding all the Superhero data
     # headers is a variable that holds the List of all the column headers.
-    selectionSort(RAWARR)
+    quickSort(RAWARR, 0, len(RAWARR) - 1)
 
     while True:
         SELECT = menu()
