@@ -229,17 +229,17 @@ def filterID(SELECT, LIST):
             except IndexError:
                 break
             print(f"""
-        Superhero ID: {NEW_LIST[0]}
-        Name: {NEW_LIST[1]}
-        ID: {NEW_LIST[2]}""")
+         Superhero ID: {NEW_LIST[0]}
+         Name: {NEW_LIST[1]}
+         ID: {NEW_LIST[2]}""")
 
         print(f"There are {len(FOUND)} superheros with a {NEW_LIST[2]}")
     else:
         for i in range(len(RAWARR)):
             print(f"""
-        Superhero ID: {RAWARR[i][0]}
-        Name: {RAWARR[i][1]}
-        ID: {RAWARR[i][2]}""")
+         Superhero ID: {RAWARR[i][0]}
+         Name: {RAWARR[i][1]}
+         ID: {RAWARR[i][2]}""")
 
 
 def filterAlign(SELECT, LIST):
@@ -278,6 +278,67 @@ def filterAlign(SELECT, LIST):
         ALIGN: {RAWARR[i][3]}""")
 
 
+def filterEyes(SELECT, LIST):
+    FOUND = []
+    if SELECT == 1:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][4] == "Brown Eyes":
+                FOUND.append(RAWARR[i])
+    elif SELECT == 2:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][4] == "Blue Eyes":
+                FOUND.append(RAWARR[i])
+    elif SELECT == 3:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][4] == "Black Eyes":
+                FOUND.append(RAWARR[i])
+    elif SELECT == 4:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][4] == "Green Eyes":
+                FOUND.append(RAWARR[i])
+    elif SELECT == 5:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][4] == "Red Eyes":
+                try:
+                    FOUND.append(RAWARR[i])
+                except IndexError:
+                    continue
+    elif SELECT == 6:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][4] != "Brown Eyes" and RAWARR[i][4] != "Blue Eyes" and RAWARR[i][4] != "Black Eyes" and \
+                    RAWARR[i][4] != "Green Eyes" and RAWARR[i][4] != "Red Eyes":
+                FOUND.append(RAWARR[i])
+    if SELECT != 7:
+        for i in range(len(FOUND)):
+            try:
+                if FOUND[i][4] == "":
+                    FOUND[i].insert(4, "UNKNOWN")
+                NEW_LIST = FOUND.pop(i)
+            except IndexError:
+                break
+            print(f"""
+         Superhero ID: {NEW_LIST[0]}
+         Name: {NEW_LIST[1]}
+         Eyes: {NEW_LIST[4]}""")
+
+        if SELECT != 6:
+            print(f"There are {len(FOUND)} superheros with {NEW_LIST[4]}")
+        else:
+            print(f"There are {len(FOUND)} superheros with other eye colors")
+    else:
+        for i in range(len(RAWARR)):
+            print(f"""
+         Superhero ID: {RAWARR[i][0]}
+         Name: {RAWARR[i][1]}
+         ID: {RAWARR[i][4]}""")
+
+def filterHair(SELECT, LIST):
+
+def filterExistence(SELECT, LIST):
+
+def filterFirstApperance(SELECT, LIST):
+
+def filterBrand(SELECT, LIST):
 ## --- MAIN PROGRAM --- ##
 
 if __name__ == "__main__":
@@ -301,6 +362,8 @@ if __name__ == "__main__":
                 filterID(CHOICE_TWO, RAWARR)
             elif CHOICE_ONE == 2:
                 filterAlign(CHOICE_TWO, RAWARR)
+            elif CHOICE_ONE == 3:
+                filterEyes(CHOICE_TWO, RAWARR)
         elif SELECT == 3:
             FOUND = search(RAWARR)
             display(FOUND)
