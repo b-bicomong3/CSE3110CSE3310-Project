@@ -6,6 +6,33 @@ Author: Beatrix Bicomong
 Date-created: 19-09-2022
 """
 
+### --- LIST AND DICTIONARIES --- ###
+
+
+FILTER = ("Identity", "Align", "Eye Color", "Hair Color", "Existence", "Appearances", "First Appearance", "Year", "Brand")
+ID = ("Public Identity", "Secret Identity", "No Dual Identity", "All")
+ALIGN = ("Good Characters", "Bad Characters", "Neutral Characters", "All")
+EYES = ("Brown Eyes", "Blue Eyes", "Black Eyes", "Green Eyes", "Red Eyes", "Other Eye Colors", "All")
+HAIR = ("Brown Hair", "Black Hair", "Blond Hair", "Red Hair", "Other Hair Colors", "Bald/No Hair", "All")
+EXISTENCE = ("Living Characters", "Deceased Characters", "All")
+BRAND = ("Marvel", "DC", "All")
+MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "All")
+MONTHS_FULL = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+MONTHS_TRY = {
+    "Jan": "January",
+    "Feb": "February",
+    "Mar": "March",
+    "Apr": "April",
+    "May": "May",
+    "Jun": "June",
+    "Jul": "July",
+    "Aug": "August",
+    "Sep": "September",
+    "Oct": "October",
+    "Nov": "November",
+    "Dec": "December"
+}
+
 
 ## --- SUBROUTINE -- ##
 
@@ -20,7 +47,43 @@ def getRawData(fileName):
     return TEMPLI, VAR
 
 
+def editRawData(file):
+    """
+    edits through raw data for blanks in list and inserts "UNKNOWN"
+    :param file: list
+    :return: list
+    """
+    for i in range(len(RAWARR)):
+        for j in range(len(RAWARR[i])):
+            if RAWARR[i][j] == "":
+                RAWARR[i].insert(j, "UNKNOWN")
+    return RAWARR
+
+
+def editMonths(file):
+    """
+    edits through months in the list and converts to one common layout
+    :param file: list
+    :return: list
+    """
+    global MONTHS, MONTHS_FULL, MONTHS_TRY
+    for i in range(len(RAWARR)):
+        TEMP = RAWARR[i][8].split("-")
+        if TEMP[0] in MONTHS:
+            MONTH_TEMP = MONTHS_TRY[TEMP[0]]
+            YEAR_TEMP = int(TEMP[1]) + 1900
+            LIST_TEMP = str(YEAR_TEMP), MONTH_TEMP
+            NEW_VALUE = ", ".join(LIST_TEMP)
+            RAWARR[i][8] = NEW_VALUE
+
+    return RAWARR
+
+
 def intro():
+    """
+    shows the title of the program
+    :return: None
+    """
     print("Welcome to Superhero Sort and Search")
 
 
@@ -29,7 +92,7 @@ def intro():
 def menu():
     """
     displays user menu
-    :return: CHOICE
+    :return: CHOICE (int)
     """
     print("""
     1. Show list of all heroes
@@ -51,6 +114,13 @@ def search(LIST):
     """
     VALUE = input("What is the Superhero ID? ")
 
+    if "D" in VALUE or "M" in VALUE:
+        while True:
+            if len(VALUE) != 4:
+                VALUE = VALUE[:1] + "0" + VALUE[1:]
+            else:
+                break
+
     for i in range(len(RAWARR)):
         if RAWARR[i][0] == VALUE:
             FOUND = RAWARR.pop(i)
@@ -66,96 +136,51 @@ def filterSearch():
     gives user options to filter through list
     :return: CHOICE
     """
-    print("""
-Search by:
-    1. Identity
-    2. Align
-    3. Eye Color
-    4. Hair Color
-    5. Existence
-    6. Appearances
-    7. First Appearance
-    8. Year
-    9. Brand
-    """)
+    global FILTER, ID, ALIGN, EYES, HAIR, EXISTENCE, BRAND, MONTHS
+
+    print("Search by:")
+    for i in range(len(FILTER)):
+        print(f"{i + 1}. {FILTER[i]}")
 
     CHOICE_ONE = input("> ")
     CHOICE_ONE = int(CHOICE_ONE)
 
     if CHOICE_ONE == 1:
-        print("""
-Search by:
-    1. Public Identity
-    2. Secret Identity
-    3. No Dual Identity
-    4. All     
-        """)
+        print("Search by:")
+        for i in range(len(ID)):
+            print(f"{i + 1}. {ID[i]}")
     elif CHOICE_ONE == 2:
-        print("""
-Search by:
-    1. Good Characters
-    2. Bad Characters
-    3. Neutral Characters
-    4. All
-        """)
+        print("Search by:")
+        for i in range(len(ALIGN)):
+            print(f"{i + 1}. {ALIGN[i]}")
     elif CHOICE_ONE == 3:
-        print("""
-Search by:
-    1. Brown Eyes
-    2. Blue Eyes
-    3. Black Eyes
-    4. Green Eyes
-    5. Red Eyes
-    6. Other Eye Colors
-    7. All    
-        """)
+        print("Search by:")
+        for i in range(len(EYES)):
+            print(f"{i + 1}. {EYES[i]}")
     elif CHOICE_ONE == 4:
-        print("""
-Search by:
-    1. Brown Hair
-    2. Black Hair
-    3. Blond Hair
-    4. Red Hair
-    5. Other Hair Colors
-    6. All    
-        """)
+        print("Search by:")
+        for i in range(len(HAIR)):
+            print(f"{i + 1}. {HAIR[i]}")
     elif CHOICE_ONE == 5:
-        print("""
-Search by:
-    1. Living Characters
-    2. Deceased Characters
-    3. All
-        """)
+        print("Search by:")
+        for i in range(len(EXISTENCE)):
+            print(f"{i + 1}. {EXISTENCE[i]}")
     elif CHOICE_ONE == 7:
-        print("""
-Search by:
-    1. Jan
-    2. Feb
-    3. Mar
-    4. Apr
-    5. May
-    6. Jun
-    7. Jul
-    8. Aug
-    9. Sep
-    10. Oct
-    11. Nov
-    12. Dec
-    13. All        
-        """)
+        print("Search by:")
+        for i in range(len(MONTHS)):
+            print(f"{i + 1}. {MONTHS[i]}")
     elif CHOICE_ONE == 9:
-        print("""
-Search by:
-    1. Marvel
-    2. DC
-    3. All
-        """)
+        print("Search by:")
+        for i in range(len(BRAND)):
+            print(f"{i + 1}. {BRAND[i]}")
 
-    if CHOICE_ONE != 6 or 8:
+    if CHOICE_ONE == 6 and CHOICE_ONE == 8:
+        CHOICE_TWO = 0
+    elif CHOICE_ONE == 0:
+        CHOICE_TWO = -1
+    else:
         CHOICE_TWO = input("> ")
         CHOICE_TWO = int(CHOICE_TWO)
-    else:
-        CHOICE_TWO = 0
 
     return CHOICE_ONE, CHOICE_TWO
 
@@ -165,8 +190,8 @@ Search by:
 def insertionSort(LIST):
     """
     splits the list into a sorted and unsorted half and then takes the lowest index of the unsorted section and places it in its relative position in the sorted section.
-    :param LIST:
-    :return:
+    :param LIST: list
+    :return: None
     """
     for i in range(1, len(LIST)):
         IND_VALUE = LIST[i]  # Saving the value of the lowest index in unsorted
@@ -184,7 +209,7 @@ def insertionSort(LIST):
 def display(HERO):
     """
     displays hero's information
-    :param HERO:
+    :param HERO: list
     :return: None
     """
     print(f"""
@@ -205,22 +230,23 @@ Brand: {HERO[10]}
 def filterID(SELECT, LIST):
     """
     filters using ID as filter
-    :param SELECT:
-    :param LIST:
-    :return:
+    :param SELECT: int
+    :param LIST: list
+    :return: None
     """
+    global ID
     FOUND = []
     if SELECT == 1:
         for i in range(len(RAWARR)):
-            if RAWARR[i][2] == "Public Identity":
+            if RAWARR[i][2] == ID[0]:
                 FOUND.append(RAWARR[i])
     elif SELECT == 2:
         for i in range(len(RAWARR)):
-            if RAWARR[i][2] == "Secret Identity":
+            if RAWARR[i][2] == ID[1]:
                 FOUND.append(RAWARR[i])
     elif SELECT == 3:
         for i in range(len(RAWARR)):
-            if RAWARR[i][2] == "No Dual Identity":
+            if RAWARR[i][2] == ID[2]:
                 FOUND.append(RAWARR[i])
     if SELECT != 4:
         for i in range(len(FOUND)):
@@ -234,7 +260,7 @@ def filterID(SELECT, LIST):
          ID: {NEW_LIST[2]}""")
 
         print(f"There are {len(FOUND)} superheros with a {NEW_LIST[2]}")
-    else:
+    elif SELECT == 4:
         for i in range(len(RAWARR)):
             print(f"""
          Superhero ID: {RAWARR[i][0]}
@@ -243,18 +269,25 @@ def filterID(SELECT, LIST):
 
 
 def filterAlign(SELECT, LIST):
+    """
+    filters using alignment as filter
+    :param SELECT: int
+    :param LIST: list
+    :return: None
+    """
+    global ALIGN
     FOUND = []
     if SELECT == 1:
         for i in range(len(RAWARR)):
-            if RAWARR[i][3] == "Good Characters":
+            if RAWARR[i][3] == ALIGN[0]:
                 FOUND.append(RAWARR[i])
     elif SELECT == 2:
         for i in range(len(RAWARR)):
-            if RAWARR[i][3] == "Bad Characters":
+            if RAWARR[i][3] == ALIGN[1]:
                 FOUND.append(RAWARR[i])
     elif SELECT == 3:
         for i in range(len(RAWARR)):
-            if RAWARR[i][3] == "Neutral Characters":
+            if RAWARR[i][3] == ALIGN[2]:
                 FOUND.append(RAWARR[i])
     if SELECT != 4:
         for i in range(len(FOUND)):
@@ -265,54 +298,54 @@ def filterAlign(SELECT, LIST):
             print(f"""
         Superhero ID: {NEW_LIST[0]}
         Name: {NEW_LIST[1]}
-        ALIGN: {NEW_LIST[3]}""")
+        Align: {NEW_LIST[3]}""")
 
         print(f"There are {len(FOUND)} {NEW_LIST[3]}")
-    else:
+    elif SELECT == 4:
         for i in range(len(RAWARR)):
-            if RAWARR[i][3] == "":
-                RAWARR[i].insert(3, "UNKNOWN")
             print(f"""
         Superhero ID: {RAWARR[i][0]}
         Name: {RAWARR[i][1]}
-        ALIGN: {RAWARR[i][3]}""")
+        Align: {RAWARR[i][3]}""")
 
 
 def filterEyes(SELECT, LIST):
+    """
+    filters using eye color as filter
+    :param SELECT: int
+    :param LIST: list
+    :return: None
+    """
+    global EYES
     FOUND = []
     if SELECT == 1:
         for i in range(len(RAWARR)):
-            if RAWARR[i][4] == "Brown Eyes":
+            if RAWARR[i][4] == EYES[0]:
                 FOUND.append(RAWARR[i])
     elif SELECT == 2:
         for i in range(len(RAWARR)):
-            if RAWARR[i][4] == "Blue Eyes":
+            if RAWARR[i][4] == EYES[1]:
                 FOUND.append(RAWARR[i])
     elif SELECT == 3:
         for i in range(len(RAWARR)):
-            if RAWARR[i][4] == "Black Eyes":
+            if RAWARR[i][4] == EYES[2]:
                 FOUND.append(RAWARR[i])
     elif SELECT == 4:
         for i in range(len(RAWARR)):
-            if RAWARR[i][4] == "Green Eyes":
+            if RAWARR[i][4] == EYES[3]:
                 FOUND.append(RAWARR[i])
     elif SELECT == 5:
         for i in range(len(RAWARR)):
-            if RAWARR[i][4] == "Red Eyes":
-                try:
-                    FOUND.append(RAWARR[i])
-                except IndexError:
-                    continue
+            if RAWARR[i][4] == EYES[4]:
+                FOUND.append(RAWARR[i])
     elif SELECT == 6:
         for i in range(len(RAWARR)):
-            if RAWARR[i][4] != "Brown Eyes" and RAWARR[i][4] != "Blue Eyes" and RAWARR[i][4] != "Black Eyes" and \
-                    RAWARR[i][4] != "Green Eyes" and RAWARR[i][4] != "Red Eyes":
+            if RAWARR[i][4] != EYES[0] and RAWARR[i][4] != EYES[1] and RAWARR[i][4] != EYES[2] and \
+                    RAWARR[i][4] != EYES[3] and RAWARR[i][4] != EYES[4]:
                 FOUND.append(RAWARR[i])
     if SELECT != 7:
         for i in range(len(FOUND)):
             try:
-                if FOUND[i][4] == "":
-                    FOUND[i].insert(4, "UNKNOWN")
                 NEW_LIST = FOUND.pop(i)
             except IndexError:
                 break
@@ -325,32 +358,271 @@ def filterEyes(SELECT, LIST):
             print(f"There are {len(FOUND)} superheros with {NEW_LIST[4]}")
         else:
             print(f"There are {len(FOUND)} superheros with other eye colors")
-    else:
+    elif SELECT == 7:
         for i in range(len(RAWARR)):
             print(f"""
          Superhero ID: {RAWARR[i][0]}
          Name: {RAWARR[i][1]}
-         ID: {RAWARR[i][4]}""")
+         Eyes: {RAWARR[i][4]}""")
+
 
 def filterHair(SELECT, LIST):
+    """
+    filters using hair color as filter
+    :param SELECT: int
+    :param LIST: list
+    :return: None
+    """
+    global HAIR
+    TEMP = HAIR[5].split("/")
+    BALD = TEMP[0]
+    NO_HAIR = TEMP[1]
+
+    FOUND = []
+    if SELECT == 1:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][5] == HAIR[0]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 2:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][5] == HAIR[1]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 3:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][5] == HAIR[2]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 4:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][5] == HAIR[3]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 5:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][5] != HAIR[0] and RAWARR[i][5] != HAIR[1] and RAWARR[i][5] != HAIR[2] and \
+                    RAWARR[i][5] != HAIR[3]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 6:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][5] == BALD or RAWARR[i][5] == NO_HAIR:
+                FOUND.append(RAWARR[i])
+    if SELECT != 7:
+        for i in range(len(FOUND)):
+            try:
+                NEW_LIST = FOUND.pop(i)
+            except IndexError:
+                break
+            print(f"""
+         Superhero ID: {NEW_LIST[0]}
+         Name: {NEW_LIST[1]}
+         Hair: {NEW_LIST[5]}""")
+
+        if SELECT != 7 and SELECT != 6:
+            print(f"There are {len(FOUND)} superheros with {NEW_LIST[5]}")
+        elif SELECT == 6:
+            print(f"There are {len(FOUND)} superheroes with no hair")
+        else:
+            print(f"There are {len(FOUND)} superheros with other hair colors")
+    elif SELECT == 7:
+        for i in range(len(RAWARR)):
+            print(f"""
+         Superhero ID: {RAWARR[i][0]}
+         Name: {RAWARR[i][1]}
+         Hair: {RAWARR[i][5]}""")
+
 
 def filterExistence(SELECT, LIST):
+    """
+    filters using existence as filter
+    :param SELECT: int
+    :param LIST: list
+    :return: None
+    """
+    global EXISTENCE
+    FOUND = []
+    if SELECT == 1:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][6] == EXISTENCE[0]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 2:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][6] == EXISTENCE[1]:
+                FOUND.append(RAWARR[i])
+    if SELECT != 3:
+        for i in range(len(FOUND)):
+            try:
+                NEW_LIST = FOUND.pop(i)
+            except IndexError:
+                break
+            print(f"""
+         Superhero ID: {NEW_LIST[0]}
+         Name: {NEW_LIST[1]}
+         Existence: {NEW_LIST[6]}""")
+
+        print(f"There are {len(FOUND)} superheros who are {NEW_LIST[6]}")
+    elif SELECT == 3:
+        for i in range(len(RAWARR)):
+            print(f"""
+         Superhero ID: {RAWARR[i][0]}
+         Name: {RAWARR[i][1]}
+         Existence: {RAWARR[i][6]}""")
+    else:
+        print("Please enter a valid number")
+
 
 def filterFirstApperance(SELECT, LIST):
+    """
+    filters using first appearance as filter
+    :param SELECT: int
+    :param LIST: list
+    :return: None
+    """
+    global MONTHS, MONTHS_FULL, MONTHS_TRY
+    FOUND = []
+    if SELECT == 1:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[0] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 2:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[1] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 3:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[2] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 4:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[3] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 5:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[4] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 6:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[5] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 7:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[6] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 8:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[7] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 9:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[8] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 10:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[9] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 11:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[10] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 12:
+        for i in range(len(RAWARR)):
+            if MONTHS_FULL[11] in RAWARR[i][8]:
+                FOUND.append(RAWARR[i])
+    if SELECT != 13:
+        for i in range(len(FOUND)):
+            try:
+                NEW_LIST = FOUND.pop(i)
+            except IndexError:
+                break
+            print(f"""
+        Superhero ID: {NEW_LIST[0]}
+        Name: {NEW_LIST[1]}
+        Date: {NEW_LIST[8]}""")
+
+        TEMP = NEW_LIST[8]
+        TEMP_MONTH = TEMP.split(", ")
+        NEW_MONTH = TEMP_MONTH[1]
+
+        print(f"There are {len(FOUND)} superheros who appeared in the month of {NEW_MONTH}")
+    elif SELECT == 13:
+        for i in range(len(RAWARR)):
+            print(f"""
+        Superhero ID: {RAWARR[i][0]}
+        Name: {RAWARR[i][1]}
+        Date: {RAWARR[i][8]}""")
+    else:
+        print("Please enter a valid number")
+
 
 def filterBrand(SELECT, LIST):
+    """
+    filters using branding as filter
+    :param SELECT: int
+    :param LIST: list
+    :return: None
+    """
+    global BRAND
+    FOUND = []
+    if SELECT == 1:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][10] == BRAND[0]:
+                FOUND.append(RAWARR[i])
+    elif SELECT == 2:
+        for i in range(len(RAWARR)):
+            if RAWARR[i][10] == BRAND[1]:
+                FOUND.append(RAWARR[i])
+    if SELECT != 3:
+        for i in range(len(FOUND)):
+            try:
+                NEW_LIST = FOUND.pop(i)
+            except IndexError:
+                break
+            print(f"""
+         Superhero ID: {NEW_LIST[0]}
+         Name: {NEW_LIST[1]}
+         Brand: {NEW_LIST[10]}""")
+
+        print(f"There are {len(FOUND)} superheros who are from {NEW_LIST[10]}")
+
+    elif SELECT == 3:
+        for i in range(len(RAWARR)):
+            print(f"""
+         Superhero ID: {RAWARR[i][0]}
+         Name: {RAWARR[i][1]}
+         Brand: {RAWARR[i][10]}""")
+
+
+def filterOther(SELECT, LIST):
+    """
+    filters either using the year alone of the superhero or the amount of appearances of the superheros
+    :param SELECT: int
+    :param LIST: list
+    :return: None
+    """
+    for i in range(len(RAWARR)):
+        if CHOICE_ONE == 6:
+            print(f"""
+        Superhero ID: {RAWARR[i][0]}
+        Name: {RAWARR[i][1]}
+        Appearances: {RAWARR[i][7]}""")
+        else:
+            print(f"""
+        Superhero ID: {RAWARR[i][0]}
+        Name: {RAWARR[i][1]}
+        Appearances: {RAWARR[i][9]}""")
+
+
 ## --- MAIN PROGRAM --- ##
 
 if __name__ == "__main__":
     intro()
     RAWARR, HEADERS = getRawData('../comicBookCharData_mixed.csv')
+    editRawData(RAWARR)
+    editMonths(RAWARR)
     # rawArr is a 2D arrays holding all the Superhero data
     # headers is a variable that holds the List of all the column headers.
     insertionSort(RAWARR)
 
     while True:
         SELECT = menu()
-
+        ### INPUTS
         if SELECT == 1:
             for i in range(len(RAWARR)):
                 print(f"""
@@ -364,6 +636,16 @@ if __name__ == "__main__":
                 filterAlign(CHOICE_TWO, RAWARR)
             elif CHOICE_ONE == 3:
                 filterEyes(CHOICE_TWO, RAWARR)
+            elif CHOICE_ONE == 4:
+                filterHair(CHOICE_TWO, RAWARR)
+            elif CHOICE_ONE == 5:
+                filterExistence(CHOICE_TWO, RAWARR)
+            elif CHOICE_ONE == 7:
+                filterFirstApperance(CHOICE_TWO, RAWARR)
+            elif CHOICE_ONE == 9:
+                filterBrand(CHOICE_TWO, RAWARR)
+            elif CHOICE_ONE == 6 or CHOICE_ONE == 8:
+                filterOther(CHOICE_ONE, RAWARR)
         elif SELECT == 3:
             FOUND = search(RAWARR)
             display(FOUND)
