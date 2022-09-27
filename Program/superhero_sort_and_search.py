@@ -47,22 +47,28 @@ def menu():
         return menu()
 
 
-def search(LIST):
+def search(LIST, VALUE):
     """
-    searches for hero's id
-    :param LIST: list
-    :return: list
+    search Linearly through the list to end a value
+    :param LIST: list (int)
+    :param VALUE: int
+    :return: bool
     """
-    VALUE = input("What is the Superhero ID? ")
 
-    for i in range(len(RAWARR)):
-        if RAWARR[i][0] == VALUE:
-            FOUND = RAWARR.pop(i)
-            return FOUND
-    if RAWARR[i][0] != VALUE:
-        print("Entry is invalid!")
-        return search(LIST)
+    if "D" in VALUE or "M" in VALUE:
+        while True:
+            if len(VALUE) != 4:
+                VALUE = VALUE[:1] + "0" + VALUE[1:]
+            else:
+                break
 
+    if len(LIST) > 0:
+        if LIST[0][0] == VALUE:
+            return LIST[0]
+        else:
+            return search(LIST[1:], VALUE)
+    else:
+        return False
 
 ## -- PROCESSING
 
@@ -141,9 +147,15 @@ if __name__ == "__main__":
 
         if SELECT == 1:
             for i in range(len(RAWARR)):
-                print(RAWARR[i][:2])
+                print(f"""
+    ID: {RAWARR[i][0]} 
+    NAME: {RAWARR[i][1]}""")
         elif SELECT == 2:
-            FOUND = search(RAWARR)
-            display(FOUND)
+            SEARCH = input("What is the Superhero ID? ")
+            FOUND = search(RAWARR, SEARCH)
+            if not FOUND:
+                print("Please enter a valid value")
+            else:
+                display(FOUND)
         else:
             exit()
